@@ -1,0 +1,13 @@
+{
+  "commitish" : "1.7.5",
+  "iOS" : [
+    {
+      "name" : "SwiftSoup",
+      "hash" : "55f0b6f589f98987279734f2bc57d94416a242865f943dcccdb3d067d29b8b83"
+    },
+    {
+      "name" : "SwiftSoup",
+      "hash" : "55f0b6f589f98987279734f2bc57d94416a242865f943dcccdb3d067d29b8b83"
+    }
+  ]
+}
