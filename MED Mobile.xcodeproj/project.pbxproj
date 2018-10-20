@@ -11,6 +11,7 @@
 		16536B1B217AB2C600003ECD /* EntrySearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16536B1A217AB2C600003ECD /* EntrySearchResult.swift */; };
 		16536B1D217AB91D00003ECD /* TextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16536B1C217AB91D00003ECD /* TextFieldExtension.swift */; };
 		16536B1F217AB94B00003ECD /* SearchOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16536B1E217AB94B00003ECD /* SearchOption.swift */; };
+		16A65B98217AE8030003F488 /* SourceSansPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 16A65B97217AE8030003F488 /* SourceSansPro-Regular.ttf */; };
 		16EED9F8217A985200169389 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EED9F7217A985200169389 /* AppDelegate.swift */; };
 		16EED9FA217A985200169389 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EED9F9217A985200169389 /* ViewController.swift */; };
 		16EED9FD217A985200169389 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16EED9FB217A985200169389 /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 		16536B1A217AB2C600003ECD /* EntrySearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntrySearchResult.swift; sourceTree = "<group>"; };
 		16536B1C217AB91D00003ECD /* TextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldExtension.swift; sourceTree = "<group>"; };
 		16536B1E217AB94B00003ECD /* SearchOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchOption.swift; sourceTree = "<group>"; };
+		16A65B97217AE8030003F488 /* SourceSansPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Regular.ttf"; sourceTree = "<group>"; };
 		16EED9F4217A985100169389 /* MED Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MED Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		16EED9F7217A985200169389 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		16EED9F9217A985200169389 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				16EED9F6217A985100169389 /* MED Mobile */,
+				16A65B97217AE8030003F488 /* SourceSansPro-Regular.ttf */,
 				16EED9F5217A985100169389 /* Products */,
 				16536B12217A9BC800003ECD /* Frameworks */,
 			);
@@ -147,6 +150,7 @@
 				16EEDA02217A985200169389 /* LaunchScreen.storyboard in Resources */,
 				16EED9FF217A985200169389 /* Assets.xcassets in Resources */,
 				16EED9FD217A985200169389 /* Main.storyboard in Resources */,
+				16A65B98217AE8030003F488 /* SourceSansPro-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

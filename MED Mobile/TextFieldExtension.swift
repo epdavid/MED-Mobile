@@ -12,5 +12,7 @@ import UIKit
 extension UITextField {
     func loadDropdownData(data: [String]) {
         self.inputView = SearchOption(pickerData: data, dropdownField: self)
+        self.tintColor = .clear
+        
     }
 }

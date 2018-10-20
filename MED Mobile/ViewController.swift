@@ -10,15 +10,16 @@ import UIKit
 import Foundation
 import SwiftSoup
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate {
     var searchResults:[EntrySearchResult] = []
     var searchResultsStrings:[String] = []
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResultsStrings.count
     }
+
     
     @IBOutlet weak var searchOptionsPickerField: UITextField!
-    let searchOptions = ["Headword (with alternate spellings",
+    let searchOptions = ["Headword (with alternate spellings)",
                          "Entire Entry",
                          "Headword (preferred spelling only)",
                          "Definition and Notes", "Etymology",
@@ -51,22 +52,29 @@ class ViewController: UIViewController, UITableViewDataSource {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         resultsView.dataSource = self
+        query.delegate = self
         searchOptionsPickerField.loadDropdownData(data: searchOptions)
+        
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
+        query.autocapitalizationType = .none
     }
      
     @IBOutlet weak var resultsView: UITableView!
-    @IBOutlet weak var query: UITextField!
+    @IBOutlet weak var query: UISearchBar!
     
-    @IBAction func searchButton(_ sender: Any) {
-        if let entry = query.text {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.view.endEditing(true)
+        if let searchText = query.text {
             let option = searchOptionCodes[searchOptions.index(of: searchOptionsPickerField.text!) ?? 0]
             if searchResultsStrings.count > 0 {
                 searchResults = []
                 searchResultsStrings = []
             }
-            getSearchResults(searchTerm: entry, searchOption: option)
+            getSearchResults(searchTerm: searchText, searchOption: option)
         }
-        
     }
     
     func getSearchResults(searchTerm: String, searchOption:String) {
@@ -108,7 +116,7 @@ class ViewController: UIViewController, UITableViewDataSource {
                 searchResults.append(entry)
                 searchResultsStrings.append(stringToAppend)
             }
-        } catch {print("err")}
+        } catch {print("errr")}
         updateView()
     }
     
@@ -116,5 +124,19 @@ class ViewController: UIViewController, UITableViewDataSource {
         DispatchQueue.main.async {
             self.resultsView.reloadData()
         }
+    }
+    
+    @IBAction func thornButton(_ sender: Any) {
+        query.text?.append("þ")
+    }
+    @IBAction func ashButton(_ sender: Any) {
+        query.text?.append("æ")
+    }
+    
+    @IBAction func ethButton(_ sender: Any) {
+        query.text?.append("ð")
+    }
+    @IBAction func yoghButton(_ sender: Any) {
+        query.text?.append("ʒ")
     }
 }
