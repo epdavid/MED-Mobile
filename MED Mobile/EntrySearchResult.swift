@@ -12,10 +12,14 @@ class EntrySearchResult {
     private var headword:String
     private var pos:String
     private var href:String
-    init(headword:String, pos:String, href:String) {
+    private var def:String
+    private var counter:String
+    init(headword:String, pos:String, href:String, def:String, counter:String) {
         self.headword = headword
         self.pos = pos
         self.href = href
+        self.def = def
+        self.counter = counter
     }
     
     func getHeadword() -> String {
@@ -26,5 +30,11 @@ class EntrySearchResult {
     }
     func getHref() -> String {
         return href
+    }
+    func getDef() -> String {
+        return def
+    }
+    func getSearchString() -> String {
+        return "\(counter) \(headword), \(pos)"
     }
 }

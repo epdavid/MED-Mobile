@@ -4,6 +4,7 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
+		<string>SourceSansPro-Semibold.ttf</string>
 		<string>SourceSansPro-Regular.ttf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>

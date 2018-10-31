@@ -12,41 +12,52 @@ import SwiftSoup
 
 class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate {
     var searchResults:[EntrySearchResult] = []
-    var searchResultsStrings:[String] = []
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResultsStrings.count
-    }
-
-    
-    @IBOutlet weak var searchOptionsPickerField: UITextField!
+    let medHome = "https://quod.lib.umich.edu/m/middle-english-dictionary/dictionary"
+    var defaultSession = URLSession(configuration: .default)
+    var dataTask: URLSessionDataTask?
     let searchOptions = ["Headword (with alternate spellings)",
-                         "Entire Entry",
                          "Headword (preferred spelling only)",
+                         "Entire Entry",
                          "Definition and Notes", "Etymology",
                          "Associated quotes and Manuscripts",
                          "Modern English word Equivalent"]
     let searchOptionCodes = ["hnf",
-                             "anywhere",
                              "h",
+                             "anywhere",
                              "notes_and_def",
                              "etyma",
                              "citation",
                              "oed"]
     
+    @IBOutlet weak var searchOptionsPickerField: UITextField!
+    @IBOutlet weak var resultsView: UITableView!
+    @IBOutlet weak var query: UISearchBar!
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let indexPath = resultsView.indexPathForSelectedRow
+        let result = searchResults[(indexPath?.row)!]
+        let destVC = segue.destination as! DefViewController
+        
+        destVC.href = result.getHref()
+
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults.count
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellReuseIdentifier")!
-        let text = searchResultsStrings[indexPath.row]
+        let text = searchResults[indexPath.row].getSearchString()
+        let definition = searchResults[indexPath.row].getDef()
         
         cell.textLabel?.text = text
+        cell.detailTextLabel?.text = definition
         
         return cell
     }
     
-    
-    let medHome = "https://quod.lib.umich.edu/m/middle-english-dictionary/dictionary"
-    var defaultSession = URLSession(configuration: .default)
-    var dataTask: URLSessionDataTask?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,18 +71,14 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
         self.view.addGestureRecognizer(tap)
         query.autocapitalizationType = .none
     }
-     
-    @IBOutlet weak var resultsView: UITableView!
-    @IBOutlet weak var query: UISearchBar!
     
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.view.endEditing(true)
         if let searchText = query.text {
             let option = searchOptionCodes[searchOptions.index(of: searchOptionsPickerField.text!) ?? 0]
-            if searchResultsStrings.count > 0 {
+            if searchResults.count > 0 {
                 searchResults = []
-                searchResultsStrings = []
             }
             getSearchResults(searchTerm: searchText, searchOption: option)
         }
@@ -81,7 +88,7 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
         dataTask?.cancel()
         
         if var urlComponents = URLComponents(string: medHome) {
-            urlComponents.query = "utf8=✓&search_field=\(searchOption)&q=\(searchTerm)" //NOTE: search_field=hnf will be modifiable later
+            urlComponents.query = "utf8=✓&search_field=\(searchOption)&q=\(searchTerm)" 
             
             guard let url = urlComponents.url else {print("err"); return}
             
@@ -90,6 +97,12 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
                 
                 if let error = error {
                     print("DataTaskError: " + error.localizedDescription + "\n")
+                    let errorEntry = EntrySearchResult(headword: "Error: No Internet Connection", pos: "", href: "#", def: "", counter: "!!")
+                    self.searchResults.append(errorEntry)
+                    DispatchQueue.main.async {
+                        self.resultsView.reloadData()
+                        self.resultsView.isUserInteractionEnabled = false
+                    }
                 } else if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
                     self.handleSearchResults(html: data)
                 }
@@ -109,12 +122,13 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
                 let headword:String = try e.child(0).child(1).text() //get h3 elem (first child)
                 let pos:String = try e.child(0).child(2).text()
                 let href:String = try e.child(0).child(1).attr("href")
-                let entry = EntrySearchResult(headword: headword, pos: pos, href: href)
+                let def:String = try e.child(1)
+                    .select("div.definition-block")
+                    .select("div.definition").first()?.text() ?? "No definition preview available"
                 
-                let stringToAppend:String = "\(counter) \(headword), \(pos)"
+                let entry = EntrySearchResult(headword: headword, pos: pos, href: href, def: def, counter: counter)
                 
                 searchResults.append(entry)
-                searchResultsStrings.append(stringToAppend)
             }
         } catch {print("errr")}
         updateView()
@@ -122,6 +136,9 @@ class ViewController: UIViewController, UITableViewDataSource, UISearchBarDelega
     
     func updateView() {
         DispatchQueue.main.async {
+            if (!self.resultsView.isUserInteractionEnabled) {
+                self.resultsView.isUserInteractionEnabled = true
+            }
             self.resultsView.reloadData()
         }
     }
