@@ -19,6 +19,7 @@ class DefViewController: UIViewController, UITableViewDataSource {
         return definitions.count
     }
     
+    @IBOutlet weak var viewHeightConstraint: NSLayoutConstraint!
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "defCellReuseIdentifier")! as! DefTableViewCell
         let num = definitions[indexPath.row].number
@@ -42,7 +43,6 @@ class DefViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var definitionsView: UITableView!
     
     @IBOutlet var labels: [UILabel]!
-   // @IBOutlet weak var formLabel: UILabel!
     
 
     
@@ -51,13 +51,18 @@ class DefViewController: UIViewController, UITableViewDataSource {
         self.view.showLoader()
         definitionsView.dataSource = self
         definitionsView.rowHeight = UITableView.automaticDimension
-        definitionsView.estimatedRowHeight = 140
+        //definitionsView.estimatedRowHeight = 140
         
         getWebData()
     }
     
     func updateView() {
+        let formsAndEtymTextLength:Int = entryInfo[2].count + entryInfo[3].count
         DispatchQueue.main.async {
+            if (formsAndEtymTextLength >= 350) {
+                let extensionLength:Int = ((formsAndEtymTextLength - 350) / 40) * 19
+                self.viewHeightConstraint.constant += CGFloat(extensionLength)
+            }
             for x in stride(from: 0, to: self.labels.count, by: 1) {
                 self.labels[x].text = self.entryInfo[x]
             }
@@ -103,6 +108,8 @@ class DefViewController: UIViewController, UITableViewDataSource {
             let formsAndEtym:Element = try doc.select("table.table").first()!
             try entryInfo.append(formsAndEtym.child(0).child(0).child(1).text())
             try entryInfo.append(formsAndEtym.child(0).child(1).child(1).text())
+            
+            
             
             let senses:Elements = try doc.select("div.senses div.sense")
             for def in senses {
